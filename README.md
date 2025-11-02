@@ -1,10 +1,17 @@
-# Conditional Face Generation using cGAN
+# Conditional Face Generation with DCGAN
 
-Generate photorealistic faces with controllable attributes (Smiling, Eyeglasses, Gender) using a Conditional Generative Adversarial Network trained on CelebA dataset.
+## Project Description
 
-![Python](https://img.shields.io/badge/python-3.11-blue.svg)
-![TensorFlow](https://img.shields.io/badge/TensorFlow-2.16.2-orange.svg)
-![License](https://img.shields.io/badge/license-MIT-green.svg)
+A Conditional Generative Adversarial Network implementation for generating 64×64 RGB face images with explicit control over three facial attributes: **Smiling**, **Eyeglasses**, and **Gender (Male)**. The model uses projection discriminator architecture with dual objectives: adversarial loss (real/fake classification) and attribute classification loss.
+
+**Key Specifications:**
+- **Architecture:** Generator (100D latent + 3D attributes → 64×64 RGB) + Dual-head Discriminator
+- **Dataset:** CelebA with balanced sampling (10,280 images across 8 attribute combinations)
+- **Training:** 1,620 epochs with mixed precision (FP16), 3:1 D/G training ratio
+- **Performance:** 94.20% final validation attribute accuracy
+- **Framework:** TensorFlow 2.16.2 with Keras API
+
+Generate faces with controllable attributes (Smiling, Eyeglasses, Gender) using a trained on CelebA dataset.
 
 ---
 
@@ -27,6 +34,7 @@ Generate photorealistic faces with controllable attributes (Smiling, Eyeglasses,
 - [References](#references)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
+- [Note](#note)
 
 ---
 
@@ -36,39 +44,26 @@ Generate photorealistic faces with controllable attributes (Smiling, Eyeglasses,
 
 <table>
 <tr>
-<td align="center"><img src="images/samples_epoch_162.png" width="150"/><br/><b>Epoch 162</b></td>
-<td align="center"><img src="images/samples_epoch_324.png" width="150"/><br/><b>Epoch 324</b></td>
-<td align="center"><img src="images/samples_epoch_486.png" width="150"/><br/><b>Epoch 486</b></td>
-<td align="center"><img src="images/samples_epoch_648.png" width="150"/><br/><b>Epoch 648</b></td>
-<td align="center"><img src="images/samples_epoch_810.png" width="150"/><br/><b>Epoch 810</b></td>
+<td align="center"><img src="images/samples_epoch_162.png" width="180"/><br/><b>Epoch 162</b></td>
+<td align="center"><img src="images/samples_epoch_324.png" width="180"/><br/><b>Epoch 324</b></td>
+<td align="center"><img src="images/samples_epoch_486.png" width="180"/><br/><b>Epoch 486</b></td>
+<td align="center"><img src="images/samples_epoch_648.png" width="180"/><br/><b>Epoch 648</b></td>
+<td align="center"><img src="images/samples_epoch_810.png" width="180"/><br/><b>Epoch 810</b></td>
 </tr>
 <tr>
-<td align="center"><img src="images/samples_epoch_972.png" width="150"/><br/><b>Epoch 972</b></td>
-<td align="center"><img src="images/samples_epoch_1134.png" width="150"/><br/><b>Epoch 1134</b></td>
-<td align="center"><img src="images/samples_epoch_1296.png" width="150"/><br/><b>Epoch 1296</b></td>
-<td align="center"><img src="images/samples_epoch_1458.png" width="150"/><br/><b>Epoch 1458</b></td>
-<td align="center"><img src="images/samples_epoch_1620.png" width="150"/><br/><b>Epoch 1620</b></td>
+<td align="center"><img src="images/samples_epoch_972.png" width="180"/><br/><b>Epoch 972</b></td>
+<td align="center"><img src="images/samples_epoch_1134.png" width="180"/><br/><b>Epoch 1134</b></td>
+<td align="center"><img src="images/samples_epoch_1296.png" width="180"/><br/><b>Epoch 1296</b></td>
+<td align="center"><img src="images/samples_epoch_1458.png" width="180"/><br/><b>Epoch 1458</b></td>
+<td align="center"><img src="images/samples_epoch_1620.png" width="180"/><br/><b>Epoch 1620</b></td>
 </tr>
 </table>
 
 ### Final Results
 
-| Dataset Samples | Generated Faces |
-|:--:|:--:|
-| ![Dataset](images/64x64_selected_attributes_images.png) | ![Generated](images/final_samples.png) |
-
----
-
-## Project Description
-
-A Conditional Generative Adversarial Network (cGAN) implementation for generating 64×64 RGB face images with explicit control over three facial attributes: **Smiling**, **Eyeglasses**, and **Gender (Male)**. The model uses projection discriminator architecture with dual objectives: adversarial loss (real/fake classification) and attribute classification loss.
-
-**Key Specifications:**
-- **Architecture:** Generator (100D latent + 3D attributes → 64×64 RGB) + Dual-head Discriminator
-- **Dataset:** CelebA with balanced sampling (10,280 images across 8 attribute combinations)
-- **Training:** 1,620 epochs with mixed precision (FP16), 3:1 D/G training ratio
-- **Performance:** 94.20% final validation attribute accuracy
-- **Framework:** TensorFlow 2.16.2 with Keras API
+| 50 Generated Sample Faces |
+|:--:|
+| ![Generated](images/final_samples.png) |
 
 ---
 
@@ -79,8 +74,8 @@ A Conditional Generative Adversarial Network (cGAN) implementation for generatin
 Create and activate conda environment:
 
 ```bash
-conda create -n cgan-face python=3.11
-conda activate cgan-face
+conda create -n gan-project python=3.11
+conda activate gan-project
 ```
 
 Install dependencies:
@@ -91,11 +86,11 @@ pip install tensorflow==2.16.2 gradio==3.50.2 huggingface-hub==0.19.4 pillow==10
 
 ### Download Pre-trained Models
 
-Download the trained models from [Kaggle](https://www.kaggle.com/models/chaching1998/rofevc/keras/version_1):
-- `generator.keras` (44MB)
+Download the trained models from this repository:
+- `generator.keras`
 - `discriminator.keras`
 
-Place them in the project root directory.
+Place them in the project root directory along with the *gradio_app.py* file.
 
 ---
 
@@ -242,19 +237,24 @@ To mitigate severe class imbalance (especially for Eyeglasses), we employ strati
 $$\mathcal{L}_D = \mathcal{L}_D^{\text{adv}} + \mathcal{L}_D^{\text{attr}}$$
 
 - **Hinge Loss (Adversarial):**
-  $$\mathcal{L}_D^{\text{adv}} = \mathbb{E}_{\mathbf{x} \sim p_{\text{data}}}[\max(0, 1 - D(\mathbf{x}, \mathbf{a}))] + \mathbb{E}_{\mathbf{z} \sim p_z}[\max(0, 1 + D(G(\mathbf{z}, \mathbf{a}), \mathbf{a}))]$$
+
+$$\mathcal{L}_D^{\text{adv}} = \mathbb{E}_{\mathbf{x} \sim p_{\text{data}}}[\max(0, 1 - D(\mathbf{x}, \mathbf{a}))] + \mathbb{E}_{\mathbf{z} \sim p_z}[\max(0, 1 + D(G(\mathbf{z}, \mathbf{a}), \mathbf{a}))]$$
 
 - **Attribute Loss (Binary Cross-Entropy):**
-  $$\mathcal{L}_D^{\text{attr}} = -\sum_{i=1}^{3} [a_i \log(\hat{a}_i) + (1 - a_i) \log(1 - \hat{a}_i)]$$
+
+$$\mathcal{L}_D^{\text{attr}} = -\sum_{i=1}^{3} [a_i \log(\hat{a}_i) + (1 - a_i) \log(1 - \hat{a}_i)]$$
 
 **Generator Loss:**
 
 $$\mathcal{L}_G = \mathcal{L}_G^{\text{adv}} + \mathcal{L}_G^{\text{attr}}$$
 
 - **Hinge Loss:**
-  $$\mathcal{L}_G^{\text{adv}} = -\mathbb{E}_{\mathbf{z} \sim p_z}[D(G(\mathbf{z}, \mathbf{a}), \mathbf{a})]$$
 
-- **Attribute Loss:** Same as discriminator
+$$\mathcal{L}_G^{text{adv}} = -\mathbb{E}_{\mathbf{z} \sim p_{\text{z}}}[D(G(\mathbf{z}, \mathbf{a}), \mathbf{a})]$$
+
+- **Attribute Loss:**
+
+$$\mathcal{L}_D^{\text{attr}} = -\sum_{i=1}^{3} [a_i \log(\hat{a}_i) + (1 - a_i) \log(1 - \hat{a}_i)]$$
 
 ---
 
@@ -316,10 +316,6 @@ $$\mathcal{L}_G = \mathcal{L}_G^{\text{adv}} + \mathcal{L}_G^{\text{attr}}$$
 - All attributes show F1-scores > 0.91, indicating robust classification
 - Precision and recall are well-balanced across all classes
 
-### Generated Samples
-
-![Final Samples](images/final_samples.png)
-
 **Quality Assessment:**
 - Sharp 64×64 resolution with realistic skin tones
 - Accurate attribute manifestation (eyeglasses, smiles, gender features)
@@ -332,7 +328,7 @@ $$\mathcal{L}_G = \mathcal{L}_G^{\text{adv}} + \mathcal{L}_G^{\text{attr}}$$
 
 ```
 conditional-face-cgan/
-├── code.ipynb                    # executed training notebook (44MB)
+├── cfgwdcgan.ipynb                    # executed training notebook (44MB)
 ├── gradio_app.py                 # interactive web interface
 ├── generator.keras               # trained generator model
 ├── discriminator.keras           # trained discriminator model
@@ -474,7 +470,6 @@ scikit-learn>=1.0.0
 
 - **GPU:** NVIDIA P100 (16GB VRAM) or equivalent
 - **RAM:** 16GB minimum
-- **Storage:** 50GB (dataset + checkpoints + training logs)
 
 ---
 
@@ -503,4 +498,10 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) file for 
 
 ---
 
-**For questions or collaborations, open an issue in this repository.**
+## Note
+
+| AI was used to generate most of the docstrings and inline comments in the code. |
+|:--:|
+
+| AI was used to generate the README.md file for this project. |
+|:--:|

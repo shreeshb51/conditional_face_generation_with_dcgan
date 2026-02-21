@@ -36,8 +36,6 @@ Generate faces with controllable attributes (Smiling, Eyeglasses, Gender) using 
 - [Acknowledgments](#acknowledgments)
 - [Note](#note)
 
----
-
 ## Visual Overview
 
 ### Training Progression (162 → 1620 Epochs)
@@ -65,8 +63,6 @@ Generate faces with controllable attributes (Smiling, Eyeglasses, Gender) using 
 |:--:|
 | ![Generated](images/final_samples.png) |
 
----
-
 ## Installation
 
 ### Environment Setup
@@ -92,8 +88,6 @@ Download the trained models from this repository:
 
 Place them in the project root directory along with the *gradio_app.py* file.
 
----
-
 ## Quick Start
 
 ### Running the Gradio Interface
@@ -115,8 +109,6 @@ The app launches at `http://localhost:7860` with controls for:
 
 Load the generator model and generate faces with specified attributes. The model accepts a 100-dimensional latent vector and a 3-dimensional attribute vector [smiling, eyeglasses, male], each with binary values (0 or 1).
 
----
-
 ## Features
 
 - **Conditional Generation:** Explicit control over 3 binary facial attributes
@@ -125,8 +117,6 @@ Load the generator model and generate faces with specified attributes. The model
 - **Mixed Precision Training:** FP16 acceleration for faster convergence on P100 GPU
 - **Interactive Interface:** Real-time generation via Gradio web app
 - **Reproducible Results:** Seed-controlled generation for consistent outputs
-
----
 
 ## Dataset & Preprocessing
 
@@ -180,8 +170,6 @@ To mitigate severe class imbalance (especially for Eyeglasses), we employ strati
 
 ![Dataset Samples](images/64x64_selected_attributes_images.png)
 
----
-
 ## Model Architecture
 
 ### Generator
@@ -210,8 +198,6 @@ To mitigate severe class imbalance (especially for Eyeglasses), we employ strati
 **Output Resolution Progression:** 64×64 → 32×32 → 16×16 → 8×8 → 4×4 → flatten
 
 **Total Parameters:** ~2.8M
-
----
 
 ## Training Configuration
 
@@ -255,8 +241,6 @@ $$\mathcal{L}_G^{text{adv}} = -\mathbb{E}_{\mathbf{z} \sim p_{\text{z}}}[D(G(\ma
 - **Attribute Loss:**
 
 $$\mathcal{L}_D^{\text{attr}} = -\sum_{i=1}^{3} [a_i \log(\hat{a}_i) + (1 - a_i) \log(1 - \hat{a}_i)]$$
-
----
 
 ## Results & Analysis
 
@@ -322,8 +306,6 @@ $$\mathcal{L}_D^{\text{attr}} = -\sum_{i=1}^{3} [a_i \log(\hat{a}_i) + (1 - a_i)
 - Minimal artifacts or mode collapse
 - Diverse facial structures and lighting conditions
 
----
-
 ## Repository Structure
 
 ```
@@ -356,8 +338,6 @@ conditional-face-cgan/
 └── LICENSE
 ```
 
----
-
 ## Mathematical Foundations
 
 ### Conditional GAN Objective
@@ -389,8 +369,6 @@ $$\mathcal{L}_G^{\text{hinge}} = -\mathbb{E}_{\mathbf{z}}[D(G(\mathbf{z}, \mathb
 
 The hinge loss provides a margin of safety, reducing oscillations and improving training stability.
 
----
-
 ## Technical Implementation
 
 ### Mixed Precision Training
@@ -408,8 +386,6 @@ For each generator update, the discriminator trains 3 times. This ratio prevents
 ### Learning Rate Scheduling
 
 Learning rate decays by 50% when validation accuracy shows no improvement for 162 consecutive epochs. This adaptive scheduling prevents oscillations in later training stages while allowing aggressive learning in early epochs.
-
----
 
 ## Known Issues & Limitations
 
@@ -443,8 +419,6 @@ First 100 epochs show volatile loss oscillations (visible in training curves). T
 ### 8. No Interpolation Controls
 Current interface uses discrete 0/1 attribute values. Continuous interpolation (e.g., 0.5 for "slightly smiling") is theoretically possible but not implemented in the current version.
 
----
-
 ## Dependencies
 
 ### Core Requirements
@@ -471,8 +445,6 @@ scikit-learn>=1.0.0
 - **GPU:** NVIDIA P100 (16GB VRAM) or equivalent
 - **RAM:** 16GB minimum
 
----
-
 ## References
 
 1. Goodfellow, I., et al. (2014). "Generative Adversarial Networks." *NeurIPS*.
@@ -481,13 +453,9 @@ scikit-learn>=1.0.0
 4. Liu, Z., et al. (2015). "Deep Learning Face Attributes in the Wild." *ICCV* (CelebA Dataset).
 5. Lim, J. H., & Ye, J. C. (2017). "Geometric GAN." *arXiv:1705.02894* (Hinge Loss Formulation).
 
----
-
 ## License
 
 This project is licensed under the MIT License. See [LICENSE](LICENSE) file for details.
-
----
 
 ## Acknowledgments
 
@@ -495,8 +463,6 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) file for 
 - **CelebA Dataset** creators (MMLAB, Chinese University of Hong Kong)
 - **TensorFlow/Keras** team for deep learning framework
 - **Gradio** team for rapid prototyping interface
-
----
 
 ## Note
 
